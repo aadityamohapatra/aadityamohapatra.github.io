@@ -3,62 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Gay Website</title>
+    <title>The Button</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            /* Ensure no scrollbars when modal is not shown, if button is very large */
+            overflow: hidden;
+        }
+        /* Basic styling for the close button character if needed */
+        .close-button-char {
+            line-height: 1;
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 flex flex-col items-center justify-center min-h-screen p-6">
+<body class="bg-gray-900 flex items-center justify-center min-h-screen antialiased">
 
-    <div class="bg-white shadow-lg rounded-lg p-8 max-w-2xl w-full text-center">
-        <header class="mb-8">
-            <h1 class="text-4xl font-bold text-indigo-600">Welcome to My Page!</h1>
-            <p class="text-gray-600 mt-2">This is a starting point for my new website.</p>
-        </header>
+    <button id="fireButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-24 px-40 sm:py-28 sm:px-48 text-5xl sm:text-6xl rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-150 ease-in-out focus:outline-none focus:ring-4 focus:ring-red-400 focus:ring-opacity-75">
+        PRESS
+    </button>
 
-        <main class="mb-8">
-            <img
-                src="https://placehold.co/600x300/6366F1/FFFFFF?text=Hello+GitHub+Pages!"
-                alt="Placeholder Image"
-                class="rounded-lg shadow-md mx-auto mb-6 w-full max-w-md"
-                onerror="this.onerror=null; this.src='https://placehold.co/600x300/CCCCCC/FFFFFF?text=Image+Not+Found';"
-            >
-            <p class="text-lg leading-relaxed">
-                I'm excited to start building my website using GitHub Pages.
-                This is a simple HTML file to get things started. I'll be adding more content soon!
-            </p>
-        </main>
-
-        <section class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-700 mb-4">What's Next?</h2>
-            <p class="text-gray-600 mb-4">
-                I plan to customize this page and add more sections. Stay tuned for updates!
-            </p>
-            <a
-                href="#"
-                class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out inline-block"
-            >
-                Press if GAY!
-            </a>
-        </section>
-
-        <footer class="border-t border-gray-300 pt-6">
-            <p class="text-gray-500 text-sm">
-                &copy; <span id="currentYear"></span> Your Father. All rights reserved. ⓒ
-            </p>
-            <p class="text-gray-500 text-sm mt-1">
-                Powered by <a href="https://pages.github.com/" class="text-indigo-500 hover:underline">GitHub Pages</a>.
-            </p>
-        </footer>
+    <div id="gifModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden p-4 z-50">
+        <div class="bg-white p-3 sm:p-5 rounded-xl shadow-xl relative max-w-lg w-full">
+            <img id="trumpGif" src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHVseTVtZnpyZzR2OWR6amx4MDRvODBlMmM2MXNodWk0YzB4cDdlcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/HmY5vP7hXP5ba/giphy.gif" alt="Donald Trump You're Fired GIF" class="w-full h-auto rounded-md">
+            <button id="closeModalButton" class="absolute -top-3 -right-3 sm:top-2 sm:right-2 bg-gray-700 hover:bg-gray-800 text-white font-bold w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-400" aria-label="Close modal">
+                <span class="text-lg sm:text-xl close-button-char">&times;</span>
+            </button>
+        </div>
     </div>
 
     <script>
-        // Script to set the current year in the footer
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        // Get references to the DOM elements
+        const fireButton = document.getElementById('fireButton');
+        const gifModal = document.getElementById('gifModal');
+        const trumpGif = document.getElementById('trumpGif'); // Reference to the img tag for the GIF
+        const closeModalButton = document.getElementById('closeModalButton');
+
+        // Store the original GIF source
+        const originalGifSrc = trumpGif.src;
+
+        // Event listener for the main button click
+        fireButton.addEventListener('click', () => {
+            // Reset the GIF src to ensure it replays from the beginning
+            // This is a common trick for animated GIFs
+            trumpGif.src = ''; // Temporarily clear the source
+            trumpGif.src = originalGifSrc; // Set it back to the original source
+
+            gifModal.classList.remove('hidden'); // Show the modal
+            gifModal.classList.add('flex'); // Ensure flex display for centering
+        });
+
+        // Event listener for the close button in the modal
+        closeModalButton.addEventListener('click', () => {
+            gifModal.classList.add('hidden'); // Hide the modal
+            gifModal.classList.remove('flex');
+        });
+
+        // Event listener to close the modal if the user clicks outside the GIF content area
+        gifModal.addEventListener('click', (event) => {
+            // Check if the click target is the modal background itself, not its children
+            if (event.target === gifModal) {
+                gifModal.classList.add('hidden'); // Hide the modal
+                gifModal.classList.remove('flex');
+            }
+        });
+
+        // Optional: Close modal with the Escape key
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !gifModal.classList.contains('hidden')) {
+                gifModal.classList.add('hidden');
+                gifModal.classList.remove('flex');
+            }
+        });
     </script>
+
 </body>
 </html>
